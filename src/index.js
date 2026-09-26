@@ -3,6 +3,7 @@
 import dotenv from "dotenv"; // this is the new way to import dotenv in ES6 modules
 
 import connectDB from "./db/index.js";
+import {app} from "./app.js";
 
 dotenv.config({
     path: "./.env"
