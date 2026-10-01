@@ -1,0 +1,39 @@
+$kind: http-request
+url: "{{server}}/users/register"
+method: POST
+body:
+  type: formdata
+  content:
+    - type: text
+      key: fullName
+      value: one
+      description: ""
+      disabled: false
+    - type: text
+      key: email
+      value: one@gmail.com
+      description: ""
+      disabled: false
+    - type: text
+      key: userName
+      value: one
+      description: ""
+      disabled: false
+    - type: text
+      key: password
+      value: "123456"
+      description: ""
+      disabled: false
+    - type: file
+      key: avatar
+      src:
+        - /C:/Users/sawan/OneDrive/Pictures/Screenshot 2025-12-17 010825.png
+      description: ""
+      disabled: false
+    - type: file
+      key: coverImage
+      src:
+        - /C:/Users/sawan/OneDrive/Pictures/Love.jpeg
+      description: ""
+      disabled: false
+order: 1790855962578

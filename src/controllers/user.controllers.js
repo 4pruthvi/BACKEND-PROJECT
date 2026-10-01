@@ -20,7 +20,7 @@ const registerUser = asyncHandler( async (req,res) => {
     // return res
 
     const {fullName, email, userName, password} = req.body
-    console.log("email:", email);
+    //console.log("email:", email);
 
     //insted of using this if syntax multiple times for validation we use advanced syntax for validation
     // if (fullName === "") {
@@ -35,7 +35,7 @@ const registerUser = asyncHandler( async (req,res) => {
     }
     
 
-    const existedUser = User.findOne({
+    const existedUser = await User.findOne({
         $or: [{ userName }, { email }]
     })
 
@@ -45,7 +45,12 @@ const registerUser = asyncHandler( async (req,res) => {
 
 
     const avatarLoacalPath = req.files?.avatar[0]?.path;
-    const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+
+    let coverImageLocalPath
+    if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+        coverImageLocalPath = req.files.coverImage[0].path
+    }
 
     if (!avatarLoacalPath) {
         throw new ApiError(400,"Avatar file is required")

@@ -51,13 +51,13 @@ const userSchema = new Schema(
     }
 
 )
-
-userSchema.pre("save", async function(next) {
+//removed next() from here (due to newer mongoose version)
+userSchema.pre("save", async function () {
     if(!this.isModified("password")) {
-        return next();
+        return;
     }
     this.password = await bcrypt.hash(this.password, 10)
-    next()
+
 })
 
 userSchema.methods.isPasswordCorrect = async function(password) {

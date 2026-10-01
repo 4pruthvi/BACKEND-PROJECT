@@ -1,0 +1,4 @@
+name: Backend-Project (VideoBox)
+values:
+  - key: server
+    value: ''
