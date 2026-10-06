@@ -3,9 +3,10 @@ import {ApiError} from "../utils/ApiError.js"
 import {User} from "../models/user.model.js"
 import {uploadOnCloudinary} from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
+import jwt from "jsonwebtoken"
+import mongoose from "mongoose"
 
-
-const generateAccessAndRefereshToken = async(userId) => {
+const generateAccessAndRefreshToken = async(userId) => {
     try {
         const user = await User.findById(userId)
         const accessToken = user.generateAccessToken()
@@ -17,7 +18,8 @@ const generateAccessAndRefereshToken = async(userId) => {
         return {accessToken, refreshToken}
 
     } catch (error) {
-        throw new ApiError(500, "Something went wrong while generating access and referesh token")
+        //console.log("TOKEN GENERATION ERROR:", error);
+        throw new ApiError(500, "Something went wrong while generating access and refresh token")
     }
 }
 
@@ -120,14 +122,15 @@ const loginUser = asyncHandler( async(req, res) => {
     const {email, userName, password} = req.body
     
     //if username or email is not entered
-    if(!userName || !email) {
+    if(!userName && !email) {
         throw new ApiError(400, "username or email is required")
     }
 
 
+
     // $ : used to use mongoDB operators
     // find if user present in database using email or username
-    const user = User.findOne({
+    const user = await User.findOne({
         $or: [{userName}, {email}]
     })
 
@@ -139,14 +142,14 @@ const loginUser = asyncHandler( async(req, res) => {
     // User = mongoose object here (mongoDB)
     // user = user instance from the database
 
-    const isPasswordValid = await user.isPasswoedCorrect(password)
+    const isPasswordValid = await user.isPasswordCorrect(password)
 
     if (!isPasswordValid) {
         throw new ApiError(401, "Invalid user credentials")
     }
 
 
-    const {accessToken, refreshToken} = await generateAccessAndRefereshToken(user._id)
+    const {accessToken, refreshToken} = await generateAccessAndRefreshToken(user._id)
 
     const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
 
